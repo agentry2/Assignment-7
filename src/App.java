@@ -1,14 +1,39 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
+class Student implements Comparable<Student> {
+    int grade;
+
+    public Student (int grade) {
+        this.grade = grade;
+    }
+
+    public int compareTo(Student stu) {
+        return grade - stu.grade;
+    }
+
+    @Override
+    public String toString () {
+        return "" + grade;    
+    }
+
+}
 public class App {
     public static int[] createRandomArray(int arrayLength) {
         Random random = new Random();
         int[] array = new int[arrayLength];
         for (int i = 0; i < arrayLength; i++){
-            array[i] = random.nextInt(100);
+            array[i] = random.nextInt();
         }
         return array;
+    }
+
+    public static <E> ArrayList<E> createRandomArray2(int arrayLength) {
+        ArrayList<E> a = new ArrayList<>();
+
+
+        return a;
     }
 
     public static boolean isSorted(int[] array) {
@@ -27,6 +52,18 @@ public class App {
                     int temp = a[j];
                     a[j] = a[j+1];
                     a[j+1] = temp;
+                }
+            }
+        }
+    }
+
+    public static <E extends Comparable<E>> void bubbleSort(ArrayList<E> a) {
+        for (int i = a.size(); i > 1; i --) {
+            for (int j = 0; j < i - 1; j ++) {
+                if (a.get(j).compareTo(a.get(j+1)) > 0) { 
+                    E temp = a.get(j);
+                    a.set(j, a.get(j+1));
+                    a.set(j+1, temp);
                 }
             }
         }
@@ -102,6 +139,49 @@ public class App {
 
     }
 
+    public static <E extends Comparable<E>> void mergeArray(ArrayList<E> a, int start, int middle, int end) {
+        ArrayList<E> c = new ArrayList<>();
+        int i = start;
+        int j = middle;
+ 
+        
+        while (i < middle && j < end){
+            if (a.get(i).compareTo(a.get(j)) <= 0) {
+                c.add(a.get(i));
+                i ++;
+            } else {
+                c.add(a.get(j));
+                j ++;
+            }
+        }
+
+        while (i < middle) {
+            c.add(a.get(i));
+            i ++;
+        }
+
+        while (j < end) {
+            c.add(a.get(j));
+            j ++;
+        }
+
+        for (i = start; i < end; i ++){
+            a.set(i, c.get(i - start));
+        }
+
+    }
+
+    public static <E extends Comparable<E>> void mergeSort(ArrayList<E> a, int start, int end){
+        if (end - start <= 1) {
+            return;
+        }
+
+        int middle = (start + end) / 2;
+        mergeSort(a, start, middle);
+        mergeSort(a, middle, end);
+        mergeArray(a, start, middle, end);
+    }
+
     public static void mergeSort(int[] a, int start, int end){
         
         if (end - start <= 1) {
@@ -114,27 +194,40 @@ public class App {
         mergeArray(a, start, middle, end);
     }
 
+    public static <E extends Comparable<E>> void mergeSort(ArrayList<E> a) {
+        mergeSort(a, 0, a.size());
+    }
+
     public static void mergeSort(int[] a) {
         mergeSort(a, 0, a.length);
     }
     
     public static void main(String[] args) throws Exception {
-        int arrayLength = 100000;
-        int[] array = createRandomArray(arrayLength);
-        // System.out.println(Arrays.toString(array));
-        long start_time;
-        float time_spent;
-        // start_time = System.currentTimeMillis() / 1000;
-        // System.out.println("Before sorting, isSorted(array): " + isSorted(array));
-        // bubbleSort(array);
-        // time_spent = System.currentTimeMillis() / 1000 - start_time;
-        // System.out.println("Bubble sort time: " + time_spent + " s");
-        start_time = System.currentTimeMillis();
-        mergeSort(array);
-        time_spent = System.currentTimeMillis() - start_time;
-        System.out.println("Merge sort time " + time_spent + " s");
-        // System.out.println(Arrays.toString(array));
-        System.out.println("After sorting, isSorted(array): " + isSorted(array));
-        System.out.println(System.currentTimeMillis());
+        ArrayList<Student> arrayList = new ArrayList<>();
+        Random random = new Random();
+        for (int i = 0; i < 10; i ++) {
+           arrayList.add(new Student(random.nextInt(100)));
+        }
+        System.out.println(arrayList.toString());
+        mergeSort(arrayList);
+        System.out.println(arrayList.toString());
+        
+        // int arrayLength = 100000;
+        // int[] array = createRandomArray(arrayLength);
+        // // System.out.println(Arrays.toString(array));
+        // long start_time;
+        // float time_spent;
+        // // start_time = System.currentTimeMillis() / 1000;
+        // // System.out.println("Before sorting, isSorted(array): " + isSorted(array));
+        // // bubbleSort(array);
+        // // time_spent = System.currentTimeMillis() / 1000 - start_time;
+        // // System.out.println("Bubble sort time: " + time_spent + " s");
+        // start_time = System.currentTimeMillis();
+        // mergeSort(array);
+        // time_spent = System.currentTimeMillis() - start_time;
+        // System.out.println("Merge sort time " + time_spent + " s");
+        // // System.out.println(Arrays.toString(array));
+        // System.out.println("After sorting, isSorted(array): " + isSorted(array));
+        // System.out.println(System.currentTimeMillis());
     }
 }
